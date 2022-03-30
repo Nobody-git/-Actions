@@ -1,14 +1,12 @@
 name: 编译 OpenWrt 固件
 on:
+  repository_dispatch:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - 'build/Tianling_source/start-up/start'
-
-  schedule:
-   - cron: 0 17 * * 5
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
 
 env:
   Github: https://github.com/${{github.repository}}
@@ -28,15 +26,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lede_source]
-
-        # [Lede_source,Lienol_source,Mortal_source,Tianling_source,openwrt_amlogic]
+        target: [Lede]
 
     steps:
-    - name: 准备结束
+    - name: 检查
       uses: actions/checkout@v2
 
-    - name: 读取设置
+    - name: 加载设置
       run: |
         source "${GITHUB_WORKSPACE}/build/${{matrix.target}}/settings.ini"
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
