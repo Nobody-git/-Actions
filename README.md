@@ -1,28 +1,31 @@
-**English** | [中文](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
-
 # Actions-OpenWrt
 
-[![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
-![GitHub Stars](https://img.shields.io/github/stars/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Stars&logo=github)
-![GitHub Forks](https://img.shields.io/github/forks/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Forks&logo=github)
+Compiling openwrt firmware using GitHub actions
+使用GitHub操作actions编译openwrt固件
 
-A template for building OpenWrt with GitHub Actions
+## Usage（使用方法）
 
-## Usage
-
-- Click the [Use this template](https://github.com/P3TERX/Actions-OpenWrt/generate) button to create a new repository.
+- Click the [Use this template](https://github.com/Nobody-git/Actions/generate) button to create a new repository.
+  单击[使用此模板](https://github.com/Nobody-git/Actions/generate)按钮创建一个新的存储库。
 - Generate `.config` files using [Lean's OpenWrt](https://github.com/coolsnowwolf/lede) source code. ( You can change it through environment variables in the workflow file. )
-- Push `.config` file to the GitHub repository.
-- Select `Build OpenWrt` on the Actions page.
+  生成`。使用[Lean的OpenWrt]配置文件(https://github.com/coolsnowwolf/lede)源代码。（可以通过工作流文件中的环境变量进行更改。）
+- Push `.config` Configure the file to the config directory of GitHub repository, and then modify the 37 line "lean" field in the startup script YML file according to the name of the configuration file
+  将文件配置到GitHub存储库的config目录，然后根据配置文件名字修改启动脚本yml文件里的37行"lean"字段，
+- Select `Build***` on the Actions page.
+  在“操作”页面上选择“Build***”。
 - Click the `Run workflow` button.
-- When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
+  单击“运行工作流”按钮，
+- After the construction is completed, click the "artifact" button at the bottom of the operation page to download the binary file.
+  构建完成后，单击操作页面最下方的“工件”按钮下载二进制文件。
 
-## Tips
+## Tips（提示）
 
-- It may take a long time to create a `.config` file and build the OpenWrt firmware. Thus, before create repository to build your own firmware, you may check out if others have already built it which meet your needs by simply [search `Actions-Openwrt` in GitHub](https://github.com/search?q=Actions-openwrt).
+- It may take a long time to create a `.config` file and build the OpenWrt firmware. Thus, before create repository to build your own firmware, you may check out if others have already built it which meet your needs by simply [search `Actions-Openwrt` in GitHub](https://github.com/search?q=Actions).
+  创建一个“”可能需要很长时间。配置文件并构建OpenWrt固件。因此，在创建存储库来构建自己的固件之前，您可以通过在GitHub中搜索“Actions Openwrt”来查看其他人是否已经构建了满足您需求的固件(https://github.com/search?q=Actions).
 - Add some meta info of your built firmware (such as firmware architecture and installed packages) to your repository introduction, this will save others' time.
+  在存储库简介中添加一些构建固件的元信息（例如固件体系结构和安装的软件包），这将节省其他人的时间。
 
-## Credits
+## thank（感谢）
 
 - [Microsoft Azure](https://azure.microsoft.com)
 - [GitHub Actions](https://github.com/features/actions)
@@ -38,7 +41,8 @@ A template for building OpenWrt with GitHub Actions
 - [ActionsRML/delete-workflow-runs](https://github.com/ActionsRML/delete-workflow-runs)
 - [dev-drprasad/delete-older-releases](https://github.com/dev-drprasad/delete-older-releases)
 - [peter-evans/repository-dispatch](https://github.com/peter-evans/repository-dispatch)
+- [P3TERX/Actions-OpenWrt](https://github.com/P3TERX/Actions-OpenWrt/generate)
 
 ## License
 
-[MIT](https://github.com/P3TERX/Actions-OpenWrt/blob/main/LICENSE) © [**P3TERX**](https://p3terx.com)
+(Nobody-git) © [**Nobody-git**]
