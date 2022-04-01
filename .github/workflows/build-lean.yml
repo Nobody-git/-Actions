@@ -80,9 +80,10 @@ jobs:
         chmod +x $GITHUB_WORKSPACE/sh/$DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/sh/$DIY_P1_SH
+        cat feeds.conf.default
 
-    - name: 更新 feeds
-      working-directory: ./workdir
+    - name: 更新 & 安装 feeds
+      working-directory: ./openwrt
       run: cd openwrt 
            ./scripts/feeds update -a
            ./scripts/feeds install -a
