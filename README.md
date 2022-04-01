@@ -24,7 +24,8 @@
 - 创建一个“”可能需要很长时间。配置文件并构建OpenWrt固件。因此，在创建存储库来构建自己的固件之前，您可以通过在GitHub中搜索“Actions Openwrt”来查看其他人是否已经构建了满足您需求的固件(https://github.com/search?q=Actions).
 - Add some meta info of your built firmware (such as firmware architecture and installed packages) to your repository introduction, this will save others' time.
 - 在存储库简介中添加一些构建固件的元信息（例如固件体系结构和安装的软件包），这将节省其他人的时间。
-
+- You can customize some of your own elements in "diy-part2. Sh" under the SH directory. The default login address 172.10.10.250 can be modified in "diy-part2. Sh". The login account root password is password.
+- 您可以在sh目录下的“diy-part2.sh”里自定义一些自己的元素，默认登陆地址172.10.10.250 可以在“diy-part2.sh”修改，登陆账户root 密码password 。
 ## thank（感谢）
 
 - [Microsoft Azure](https://azure.microsoft.com)
