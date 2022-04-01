@@ -77,14 +77,14 @@ jobs:
     - name: 自定义 feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-        chmod +x ./sh/$DIY_P1_SH
+        chmod +x sh/$DIY_P1_SH
         cd openwrt
-        cat feeds.conf.default
         $GITHUB_WORKSPACE/sh/$DIY_P1_SH
         cat feeds.conf.default
 
     - name: 更新 & 安装 feeds
       run: |
+           cd openwrt
            ./scripts/feeds update -a
            ./scripts/feeds install -a
 
@@ -97,7 +97,7 @@ jobs:
         if [ `grep -c "CONFIG_TARGET_x86_64=y" .config` -eq '1' ]; then
         echo "TARGET_PROFILE=x86-64" >> $GITHUB_ENV
         echo "CODE=Lede" >> $GITHUB_ENV
-        chmod +x $sh/$DIY_P2_SH
+        chmod +x sh/$DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/sh/$DIY_P2_SH
 
