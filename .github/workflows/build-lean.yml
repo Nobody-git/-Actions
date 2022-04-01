@@ -79,7 +79,8 @@ jobs:
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x ./sh/$DIY_P1_SH
         cd openwrt
-        ./sh/$DIY_P1_SH
+        cat feeds.conf.default
+        $GITHUB_WORKSPACE/sh/$DIY_P1_SH
         cat feeds.conf.default
 
     - name: 更新 & 安装 feeds
