@@ -20,7 +20,7 @@ rm -rf  luci-theme-argon
 git clone https://github.com/Nobody-git/luci-theme-argon.git
 
 # 修正连接数（by ベ七秒鱼ベ）
-sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
+# sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
 
 # 添加额外软件包
 git clone https://github.com/sirpdboy/luci-app-netdata.git package/luci-app-netdata
