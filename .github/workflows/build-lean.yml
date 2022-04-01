@@ -20,21 +20,11 @@ on:
         default: 'false'
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
+  Github: https://github.com/${{github.repository}}
   Author: ${{github.actor}}
   Apidz: ${{github.repository}}
   Run_number: ${{github.run_number}}
   Run_workflow: ${{github.workflow}}
-  REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
-  FEEDS_CONF: feeds.conf.default
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
-  UPLOAD_BIN_DIR: true
-  UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: false
-  UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -49,10 +39,23 @@ jobs:
     steps:
     - name: 检查
       uses: actions/checkout@main
-    - name: 加载设置
+    - name: 加载自动编译设置
       run:  
+        source "${GITHUB_WORKSPACE}/config/configure.ini"
+        echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
+        echo "REPO_URL=$REPO_URL" >> $GITHUB_ENV
         echo "CangKu=${Apidz##*/}" >> $GITHUB_ENV
         echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV 
+        echo "FEEDS_CONF=$FEEDS_CONF" >> $GITHUB_ENV
+        echo "DIY_P1_SH=$DIY_P1_SH" >> $GITHUB_ENV
+        echo "DIY_P2_SH=$DIY_P2_SH" >> $GITHUB_ENV
+        echo "UPLOAD_BIN_DIR=$UPLOAD_BIN_DIR" >> $GITHUB_ENV
+        echo "UPLOAD_FIRMWARE=$UPLOAD_FIRMWARE" >> $GITHUB_ENV
+        echo "UPLOAD_COWTRANSFER=$UPLOAD_COWTRANSFER" >> $GITHUB_ENV
+        echo "UPLOAD_WETRANSFER=$UPLOAD_WETRANSFER" >> $GITHUB_ENV
+        echo "UPLOAD_RELEASE=$UPLOAD_RELEASE" >> $GITHUB_ENV
+        echo "SERVERCHAN_SCKEY=$SERVERCHAN_SCKEY" >> $GITHUB_ENV
+        echo "UPLOAD_CONFIG=$UPLOAD_CONFIG" >> $GITHUB_ENV
 
     - name: 初始化环境
       env:
@@ -94,18 +97,13 @@ jobs:
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv config/$CONFIG_FILE openwrt/.config
+        chmod +x sh/$DIY_P2_SH
+        cd openwrt
         if [ `grep -c "CONFIG_TARGET_x86_64=y" .config` -eq '1' ]; then
          echo "TARGET_PROFILE=x86-64" >> $GITHUB_ENV
         elif [ `grep -c "CONFIG_TARGET_x86_generic=y" .config` -eq '1' ]; then
          echo "TARGET_PROFILE=x86-32" >> $GITHUB_ENV
-        elif [ `grep -c "CONFIG_TARGET.*DEVICE.*=y" .config` -eq '1' ]; then
-          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
-          [ -s DEVICE_NAME ] && echo "TARGET_PROFILE=$(cat DEVICE_NAME)" >> $GITHUB_ENV
-        else
-          echo "TARGET_PROFILE=armvirt" >> $GITHUB_ENV
         fi
-        chmod +x sh/$DIY_P2_SH
-        cd openwrt
         $GITHUB_WORKSPACE/sh/$DIY_P2_SH
 
     - name: SSH连接到操作
@@ -126,7 +124,7 @@ jobs:
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 主人：您正在使用【${{matrix.target}}】文件夹编译固件中(${{env.Apidz}}}仓库的#${{env.Run_number}}号),请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 大佬：您正在使用【${{matrix.target}}】文件夹编译固件中(${{env.Apidz}}}仓库的#${{env.Run_number}}号),请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: 编译固件
       id: compile
@@ -233,4 +231,4 @@ jobs:
     - name: 电报通知
       if: steps.organizer.outputs.status == 'success' && env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=我亲爱的✨主人✨：您使用【${{matrix.target}}】文件夹编译的[${{ env.CODE }}-${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)顺利编译完成了！💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=我亲爱的✨大佬✨：您使用【${{matrix.target}}】文件夹编译的[${{ env.CODE }}-${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)顺利编译完成了！💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
