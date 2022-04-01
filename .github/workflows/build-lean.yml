@@ -82,6 +82,7 @@ jobs:
         $GITHUB_WORKSPACE/sh/$DIY_P1_SH
 
     - name: 更新 feeds
+      working-directory: ./workdir
       run: cd openwrt 
            ./scripts/feeds update -a
            ./scripts/feeds install -a
