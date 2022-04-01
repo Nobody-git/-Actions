@@ -56,6 +56,7 @@ jobs:
         echo "UPLOAD_CONFIG=$UPLOAD_CONFIG" >> $GITHUB_ENV
         echo "CangKu=${Apidz##*/}" >> $GITHUB_ENV
         echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV 
+        echo "TARGET_PROFILE=x86-64" >> $GITHUB_ENV
 
     - name: 初始化环境
       env:
@@ -99,11 +100,6 @@ jobs:
         [ -e $CONFIG_FILE ] && mv config/$CONFIG_FILE openwrt/.config
         chmod +x sh/$DIY_P2_SH
         cd openwrt
-        if [ `grep -c "CONFIG_TARGET_x86_64=y" .config` -eq '1' ]; then
-         echo "TARGET_PROFILE=x86-64" >> $GITHUB_ENV
-        elif [ `grep -c "CONFIG_TARGET_x86_generic=y" .config` -eq '1' ]; then
-         echo "TARGET_PROFILE=x86-32" >> $GITHUB_ENV
-        fi
         $GITHUB_WORKSPACE/sh/$DIY_P2_SH
 
     - name: SSH连接到操作
@@ -139,14 +135,15 @@ jobs:
 
     - name: 检查
       if: (!cancelled())
-      run: df -hT
+      run: |
+        df -hT
       
     - name: 上传配置
       if: env.UPLOAD_CONFIG == 'true'
       uses: actions/upload-artifact@v2
       with:
         name: .config_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: config.txt
+        path: ./artifact/buildinfo/*.buildinfo
 
     - name: 上传文件
       uses: actions/upload-artifact@v2
