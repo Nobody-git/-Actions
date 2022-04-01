@@ -40,12 +40,10 @@ jobs:
     - name: 检查
       uses: actions/checkout@main
     - name: 加载自动编译设置
-      run:  
+      run: | 
         source "${GITHUB_WORKSPACE}/config/configure.ini"
-        echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
         echo "REPO_URL=$REPO_URL" >> $GITHUB_ENV
-        echo "CangKu=${Apidz##*/}" >> $GITHUB_ENV
-        echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV 
+        echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
         echo "FEEDS_CONF=$FEEDS_CONF" >> $GITHUB_ENV
         echo "DIY_P1_SH=$DIY_P1_SH" >> $GITHUB_ENV
         echo "DIY_P2_SH=$DIY_P2_SH" >> $GITHUB_ENV
@@ -56,6 +54,8 @@ jobs:
         echo "UPLOAD_RELEASE=$UPLOAD_RELEASE" >> $GITHUB_ENV
         echo "SERVERCHAN_SCKEY=$SERVERCHAN_SCKEY" >> $GITHUB_ENV
         echo "UPLOAD_CONFIG=$UPLOAD_CONFIG" >> $GITHUB_ENV
+        echo "CangKu=${Apidz##*/}" >> $GITHUB_ENV
+        echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV 
 
     - name: 初始化环境
       env:
@@ -74,7 +74,7 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: 自定义 feeds
