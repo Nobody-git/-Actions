@@ -84,7 +84,7 @@ jobs:
 
     - name: 更新 & 安装 feeds
       working-directory: ./openwrt
-      run: cd openwrt 
+      run: |
            ./scripts/feeds update -a
            ./scripts/feeds install -a
 
