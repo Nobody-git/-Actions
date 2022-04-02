@@ -131,13 +131,22 @@ jobs:
       if: (!cancelled())
       run: |
         df -hT
+        cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./buildinfo/
+        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./package/
       
     - name: 上传配置
       if: env.UPLOAD_CONFIG == 'true'
       uses: actions/upload-artifact@v2
       with:
         name: buildinfo_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: openwrt/bin/targets/*.buildinfo
+        path: buildinfo
+
+    - name: 上传软件包
+      if: env.UPLOAD_CONFIG == 'true'
+      uses: actions/upload-artifact@v2
+      with:
+        name: package_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: package
 
     - name: 上传文件
       uses: actions/upload-artifact@v2
