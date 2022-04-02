@@ -15,6 +15,7 @@ sed -i '/set luci.main.mediaurlbase=\/luci-static\/bootstrap/d' feeds/luci/theme
 cd ./feeds/luci/themes
 rm -rf  luci-theme-argon
 git clone https://github.com/Nobody-git/luci-theme-argon.git
+sed -i 's/%D %V, %C/openwrt April by john/g' package/base-files/files/etc/banner
 
 # 修正连接数（by ベ七秒鱼ベ）
 # sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
