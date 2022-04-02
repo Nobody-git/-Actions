@@ -131,8 +131,8 @@ jobs:
       if: (!cancelled())
       run: |
         df -hT
-        cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./buildinfo/
-        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./package/
+        cp -rf $(find .openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./buildinfo/
+        cp -rf $(find .openwrt/bin/packages/ -type f -name "*.ipk") ./package/
       
     - name: 上传配置
       if: env.UPLOAD_CONFIG == 'true'
