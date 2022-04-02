@@ -1,0 +1,5 @@
+src-git packages https://github.com/Nobody-git/packages
+src-git luci https://github.com/Nobody-git/luci
+src-git routing https://git.openwrt.org/feed/routing.git
+sed -i 's/\"#src-git\"/\"src-git\"/g' ./feeds.conf.default
+src-git telephony https://git.openwrt.org/feed/telephony.git
