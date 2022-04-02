@@ -20,5 +20,3 @@ git clone https://github.com/Nobody-git/luci-theme-argon.git
 # sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
 
 # 添加额外软件包
-git clone https://github.com/sirpdboy/luci-app-netdata.git package/luci-app-netdata
-git clone https://github.com/iwrt/luci-app-ikoolproxy.git package/luci-app-ikoolproxy
