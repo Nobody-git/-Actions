@@ -98,6 +98,7 @@ jobs:
       env:
         CONFIG_FILE: '${{matrix.target}}.config'
       run: |
+        [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv config/$CONFIG_FILE openwrt/.config
         chmod +x sh/$DIY_P2_SH
         cd openwrt
