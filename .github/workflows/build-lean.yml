@@ -1,11 +1,9 @@
-#
 # Description: Build OpenWrt using GitHub Actions
 # Trigger:第一次提交代码
 # Actions:build-lean
 # Branches:master
 # Path:.* 
 # Events:push
-#
 
 
 name: Build_lean
