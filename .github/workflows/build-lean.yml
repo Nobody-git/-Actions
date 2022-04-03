@@ -1,6 +1,13 @@
 #
 # Description: Build OpenWrt using GitHub Actions
 #
+# Trigger:第一次提交代码
+# Actions:build-lean
+# Branches:master
+# Path:.* 
+# Events:push
+#
+
 
 name: Build_lean
 
@@ -95,6 +102,7 @@ jobs:
         chmod +x sh/$DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/sh/$DIY_P2_SH
+        cat .config
 
     - name: SSH连接到操作
       uses: P3TERX/ssh2actions@v1.0.0
@@ -111,6 +119,7 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
@@ -131,8 +140,8 @@ jobs:
       if: (!cancelled())
       run: |
         df -hT
-        cp -rf $(find .openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./buildinfo/
-        cp -rf $(find .openwrt/bin/packages/ -type f -name "*.ipk") ./package/
+        cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./buildinfo/
+        cp -rf $(find ./openwrt/bin/packages/ -type f -name "*.ipk") ./package/
       
     - name: 上传配置
       if: env.UPLOAD_CONFIG == 'true'
@@ -217,7 +226,7 @@ jobs:
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=我亲爱的✨大佬✨：您使用【${{matrix.target}}】文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)顺利编译完成了！💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=我亲爱的✨大佬✨：您使用<${{matrix.target}}>文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)顺利编译完成了！💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: 删除工作流
       uses: GitRML/delete-workflow-runs@main
