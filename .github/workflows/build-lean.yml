@@ -103,7 +103,6 @@ jobs:
         chmod +x sh/$DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/sh/$DIY_P2_SH
-        cat &GITHUB_WORKSPACE/openwrt/.config
 
     - name: SSH连接到操作
       uses: P3TERX/ssh2actions@v1.0.0
