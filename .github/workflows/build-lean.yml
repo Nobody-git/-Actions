@@ -98,11 +98,16 @@ jobs:
       env:
         CONFIG_FILE: '${{matrix.target}}.config'
       run: |
-        [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv config/$CONFIG_FILE openwrt/.config
-        chmod +x sh/$DIY_P2_SH
+        chmod +x ./sh/$DIY_P2_SH &&  ./sh/$DIY_P2_SH
         cd openwrt
-        $GITHUB_WORKSPACE/sh/$DIY_P2_SH
+        cp -f feeds/smpackage/diy/default-settings package/lean/default-settings/files/zzz-default-settings
+        sed -i 's/v$date1/April/g' package/lean/default-settings/files/zzz-default-settings
+        cp -f feeds/smpackage/diy/banner package/base-files/files/etc/banner
+        sed -i 's/%D %V, %C/openwrt April by john/g' package/base-files/files/etc/banner
+        cp -f feeds/smpackage/diy/index_x86.htm package/lean/autocore/files/x86/index.htm
+        patch -p1 < "feeds/smpackage/diy/patches/prereq-build_new.patch"
+        cp -f $GITHUB_WORKSPACE/config/${{matrix.target}}.config .config && make defconfig
 
     - name: SSH连接到操作
       uses: P3TERX/ssh2actions@v1.0.0
@@ -115,7 +120,6 @@ jobs:
       id: package
       run: |
         cd openwrt
-        make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
