@@ -141,6 +141,8 @@ jobs:
       if: (!cancelled())
       run: |
         df -hT
+        mkdir -p ./builddir
+        mkdir -p ./package
         cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./buildinfo/
         cp -rf $(find ./openwrt/bin/packages/ -type f -name "*.ipk") ./package/
       
