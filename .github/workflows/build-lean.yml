@@ -37,7 +37,7 @@ jobs:
     steps:
     - name: 检查
       uses: actions/checkout@main
-    - name: 加载自动编译设置
+    - name: 加载编译变量设置
       run: | 
         source "${GITHUB_WORKSPACE}/config/configure.ini"
         echo "REPO_URL=$REPO_URL" >> $GITHUB_ENV
