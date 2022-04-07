@@ -82,7 +82,6 @@ jobs:
         chmod +x sh/$DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/sh/$DIY_P1_SH
-        sed -i 's/\"#src-git\"/\"src-git\"/g' ./feeds.conf.default
         cat feeds.conf.default
 
     - name: 更新 & 安装 feeds
@@ -98,12 +97,6 @@ jobs:
         [ -e $CONFIG_FILE ] && mv config/$CONFIG_FILE openwrt/.config
         chmod +x ./sh/$DIY_P2_SH &&  ./sh/$DIY_P2_SH
         cd openwrt
-        cp -f $GITHUB_WORKSPACE/config/default-settings package/lean/default-settings/files/zzz-default-settings
-        sed -i 's/v$date1/April/g' package/lean/default-settings/files/zzz-default-settings
-        cp -f $GITHUB_WORKSPACE/config/banner package/base-files/files/etc/banner
-        sed -i 's/%D %V, %C/openwrt April by john/g' package/base-files/files/etc/banner
-        cp -f $GITHUB_WORKSPACE/config/index_x86.htm package/lean/autocore/files/x86/index.htm
-        patch -p1 < "$GITHUB_WORKSPACE/config/prereq-build_new.patch"
         cp -f $GITHUB_WORKSPACE/config/${{matrix.target}}.config .config && make defconfig
 
     - name: SSH连接到操作
