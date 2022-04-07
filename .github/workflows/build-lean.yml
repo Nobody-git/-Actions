@@ -93,11 +93,11 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: 更新 & 安装 feeds
-      run: |
-           cd openwrt
-           ./scripts/feeds update -a
-           ./scripts/feeds install -a
+    #- name: 更新 & 安装 feeds
+    #  run: |
+    #       cd openwrt
+    #       ./scripts/feeds update -a
+    #       ./scripts/feeds install -a
 
     - name: 自定义配置 ${{matrix.target}}
       env:
