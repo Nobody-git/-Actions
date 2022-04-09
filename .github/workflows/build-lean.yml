@@ -116,7 +116,7 @@ jobs:
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=🎉 大佬：您正在使用【${{matrix.target}}】文件夹编译固件中(${{env.Apidz}}}仓库的#${{env.Run_number}}号),请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您正在使用[${{matrix.target}}]文件夹编译固件中(${{env.Apidz}}}仓库的#${{env.Run_number}}号),地址:${{Github}} ，准备开始编译啦，请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: 编译固件
       id: compile
@@ -221,7 +221,7 @@ jobs:
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=我亲爱的✨大佬✨：您使用<${{matrix.target}}>文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)顺利编译完成了！💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您使用<${{matrix.target}}>文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)顺利编译完成了！ 💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: 删除工作流
       uses: GitRML/delete-workflow-runs@main
