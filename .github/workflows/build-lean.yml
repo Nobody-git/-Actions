@@ -221,7 +221,7 @@ jobs:
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您使用<${{matrix.target}}>文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)顺利编译完成了！ 💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您使用<${{matrix.target}}>文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)发布地址：${{env.RELEASES_URL}}${{ steps.tag.outputs.release_tag }} 顺利编译完成了！ 💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
 
     - name: 删除工作流
       uses: GitRML/delete-workflow-runs@main
