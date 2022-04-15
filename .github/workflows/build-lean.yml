@@ -26,8 +26,8 @@ env:
   TZ: Asia/Shanghai
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  build: 
+    runs-on: ubuntu-latest
 
     steps: 
     - name: 检查项目仓库
