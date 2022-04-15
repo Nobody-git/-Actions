@@ -34,8 +34,8 @@ jobs:
       matrix:
         target: [Lean]
 
-    steps:
-    - name: 检查
+    steps: 
+    - name: 检查项目仓库
       uses: actions/checkout@main
     - name: 加载编译变量设置
       run: | 
@@ -74,22 +74,15 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-    - name: 自定义 feeds
+    - name: 自定义插件
       run: |
         [ -e $GITHUB_WORKSPACE/config/$FEEDS_CONF ] && mv config/$FEEDS_CONF openwrt/feeds.conf.default
         chmod +x sh/$DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/sh/$DIY_P1_SH
         cat feeds.conf.default
-    
-    - name: SSH连接到操作
-      uses: P3TERX/ssh2actions@v1.0.0
-      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: 更新 & 安装 feeds
+    - name: 更新 & 安装 & 插件
       run: |
            cd openwrt
            ./scripts/feeds update -a
@@ -98,9 +91,17 @@ jobs:
       env:
         CONFIG_FILE: '${{matrix.target}}.config'
       run: |
-        chmod +x ./sh/$DIY_P2_SH &&  ./sh/$DIY_P2_SH
+        chmod +x ./sh/$DIY_P2_SH && ./sh/$DIY_P2_SH
         cd openwrt
         cp -f $GITHUB_WORKSPACE/config/${{matrix.target}}.config .config && make defconfig
+    
+    - name: SSH连接到操作
+      uses: P3TERX/ssh2actions@v1.0.0
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      env:
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
     - name: 下载包文件
       id: package
       run: |
@@ -122,6 +123,8 @@ jobs:
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        echo "FILE_TIME=$(date "+%Y年%m月%d日-%H点")" >> $GITHUB_ENV
+
     - name: 检查
       if: (!cancelled())
       run: |
@@ -130,7 +133,7 @@ jobs:
         mkdir -p ./package
         cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./buildinfo/
         cp -rf $(find ./openwrt/bin/packages/ -type f -name "*.ipk") ./package/
-    - name: 上传配置
+    - name: 上传配置文件
       if: env.UPLOAD_CONFIG == 'true'
       uses: actions/upload-artifact@v2
       with:
@@ -138,20 +141,20 @@ jobs:
         path: buildinfo
 
     - name: 上传软件包
-      if: env.UPLOAD_CONFIG == 'true'
-      uses: actions/upload-artifact@v2
-      with:
+    if: env.UPLOAD_CONFIG == 'true'
+    uses: actions/upload-artifact@v2
+    with:
         name: package_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: package
 
-    - name: 上传文件
+    - name: 上传bin目录
       uses: actions/upload-artifact@v2
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin+ipk_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
-    - name: 整理文件
+    - name: 整理编译文件
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
@@ -164,7 +167,7 @@ jobs:
         find -name "*Image*" | xargs -i rm -rf {}
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
-    - name: 上传固件目录
+    - name: 上传固件目录到github
       uses: actions/upload-artifact@v2
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
@@ -193,8 +196,12 @@ jobs:
       run: |
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
         touch release.txt
-        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+        echo "[固件源码](https://github.com/immortalwrt/immortalwrt/tree/master)" >> release.txt
+        echo "由衷感谢所有为openwrt无私奉献的大佬们" >> release.txt
+        echo "IP:172.10.10.253 密码:password" >> release.txt
+        echo "📥 固件下载" >> release.txt
+        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗[国内NN网盘](${{ steps.cowtransfer.outputs.url }})" >> release.txt
+        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [国外WT网盘](${{ steps.wetransfer.outputs.url }})" >> release.txt
         echo "::set-output name=status::success"
     - name: 上传固件并发布
       uses: softprops/action-gh-release@v1
@@ -202,10 +209,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        name: ${{ env.FILE_TIME }} 「 openwrt-Project-X86-64 」
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
-        
+
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
@@ -224,4 +232,4 @@ jobs:
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+        
