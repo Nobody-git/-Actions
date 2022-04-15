@@ -8,15 +8,21 @@
 #
 
 # 自定义细节化配置
-cp -f config/default-settings openwrt/package/lean/default-settings/files/zzz-default-settings
-sed -i 's/v$date1/April/g' openwrt/package/lean/default-settings/files/zzz-default-settings
-cp -f config/banner openwrt/package/base-files/files/etc/banner
-sed -i 's/%D %V, %C/openwrt April by john/g' openwrt/package/base-files/files/etc/banner
-cp -f config/index_x86.htm openwrt/package/lean/autocore/files/x86/index.htm
-patch -p1 < "config/prereq-build_new.patch"
+# cp -f config/default-settings openwrt/package/lean/default-settings/files/zzz-default-settings
+# sed -i 's/v$date1/April/g' openwrt/package/lean/default-settings/files/zzz-default-settings
+# cp -f config/banner openwrt/package/base-files/files/etc/banner
+# sed -i 's/%D %V, %C/openwrt April by john/g' openwrt/package/base-files/files/etc/banner
+# cp -f config/index_x86.htm openwrt/package/lean/autocore/files/x86/index.htm
+# patch -p1 < "config/prereq-build_new.patch"
+
+sed -i 's/bootstrap/argon/g' ./feeds/luci/modules/luci-base/root/etc/config/luci
+rm -rf ./package/diy-ziyong/theme
+# rm -rf ./package/diy-ziyong/adguardhome
+rm -rf ./feeds/packages/net/adguardhome
+rm -rf ./feeds/packages/net/smartdns
 
 # 修改默认IP
-sed -i 's/192.168.1.1/172.10.10.250/g' openwrt/package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/172.10.10.253/g' openwrt/package/base-files/files/bin/config_generate
 
 # 修改默认主题
 # sed -i '/set luci.main.mediaurlbase=\/luci-static\/bootstrap/d' feeds/luci/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
