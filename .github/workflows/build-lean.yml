@@ -26,7 +26,7 @@ env:
   TZ: Asia/Shanghai
 
 jobs:
-  build:
+  build-lean:
     runs-on: ubuntu-20.04
     name: Build ${{matrix.target}}
     strategy:
