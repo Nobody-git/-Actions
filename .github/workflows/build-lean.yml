@@ -28,11 +28,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    name: Build ${{matrix.target}}
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [Lean]
 
     steps: 
     - name: 检查项目仓库
@@ -53,7 +48,7 @@ jobs:
         echo "SERVERCHAN_SCKEY=$SERVERCHAN_SCKEY" >> $GITHUB_ENV
         echo "UPLOAD_CONFIG=$UPLOAD_CONFIG" >> $GITHUB_ENV
         echo "CangKu=${Apidz##*/}" >> $GITHUB_ENV
-        echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV 
+        echo "Modelfile=lean" >> $GITHUB_ENV 
         echo "TARGET_PROFILE=x86-64" >> $GITHUB_ENV
         echo "RELEASES_URL=$RELEASES_URL" >> $GITHUB_ENV
     - name: 初始化环境
@@ -87,13 +82,13 @@ jobs:
            cd openwrt
            ./scripts/feeds update -a
            ./scripts/feeds install -a
-    - name: 自定义配置 ${{matrix.target}}
+    - name: 自定义配置 lean
       env:
-        CONFIG_FILE: '${{matrix.target}}.config'
+        CONFIG_FILE: 'lean.config'
       run: |
         chmod +x ./sh/$DIY_P2_SH && ./sh/$DIY_P2_SH
         cd openwrt
-        cp -f $GITHUB_WORKSPACE/config/${{matrix.target}}.config .config && make defconfig
+        cp -f $GITHUB_WORKSPACE/config/lean.config .config && make defconfig
     
     - name: SSH连接到操作
       uses: P3TERX/ssh2actions@v1.0.0
@@ -112,7 +107,7 @@ jobs:
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您正在使用[${{matrix.target}}]文件夹编译固件中(${{env.Apidz}}）仓库的#${{env.Run_number}}号,地址:${{env.Github}}/actions ，准备开始编译啦，请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您正在使用[lean}]文件夹编译固件中(${{env.Apidz}}）仓库的#${{env.Run_number}}号,地址:${{env.Github}}/actions ，准备开始编译啦，请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
     - name: 编译固件
       id: compile
       run: |
@@ -217,7 +212,7 @@ jobs:
     - name: 电报通知
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
-        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您使用<${{matrix.target}}>文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)发布地址：${{env.RELEASES_URL}}${{ steps.tag.outputs.release_tag }} 顺利编译完成了！ 💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
+        curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您使用<${{lean}}>文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)发布地址：${{env.RELEASES_URL}}${{ steps.tag.outputs.release_tag }} 顺利编译完成了！ 💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
     - name: 删除工作流
       uses: GitRML/delete-workflow-runs@main
       with:
