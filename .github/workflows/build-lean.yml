@@ -24,16 +24,16 @@ env:
   Run_workflow: ${{github.workflow}}
   TZ: Asia/Shanghai
 
-jobs:
-  build:
+jobs: 
+  build: 
     runs-on: ubuntu-20.04
     name: Build ${{matrix.target}}
-    strategy:
+    strategy: 
       fail-fast: false
-      matrix:
+      matrix: 
         target: [Lean]
 
-    steps:
+    steps: 
     - name: 检查项目仓库
       uses: actions/checkout@main
 
