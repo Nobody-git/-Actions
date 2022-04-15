@@ -5,6 +5,7 @@
 # Path:.* 
 # Events:push
 
+
 name: Build_lean
 
 on:
@@ -25,15 +26,13 @@ env:
   TZ: Asia/Shanghai
 
 jobs:
-  merge:
-    runs-on: Ubuntu-20.04
-    if: github.event.repository.owner.id == github.event.sender.id
-
+  build:
+    runs-on: ubuntu-20.04
     name: Build ${{matrix.target}}
     strategy:
       fail-fast: false
       matrix:
-        target: [lean]
+        target: [Lean]
 
     steps: 
     - name: 检查项目仓库
