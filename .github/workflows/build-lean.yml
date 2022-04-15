@@ -24,14 +24,16 @@ env:
   Run_workflow: ${{github.workflow}}
   TZ: Asia/Shanghai
 
-jobs: 
-  build: 
+jobs:
+  build:
     runs-on: ubuntu-20.04
+    if: github.event.repository.owner.id == github.event.sender.id
+    
     name: Build ${{matrix.target}}
-    strategy: 
+    strategy:
       fail-fast: false
-      matrix: 
-        target: [Lean]
+      matrix:
+        target: [lean]
 
     steps: 
     - name: 检查项目仓库
