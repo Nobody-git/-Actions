@@ -110,7 +110,7 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-    - name: 电报通知
+    - name: 电报通知TG
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
         curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您正在使用[${{matrix.target}}]文件夹编译固件中(${{env.Apidz}}）仓库的#${{env.Run_number}}号,地址:${{env.Github}}/actions ，准备开始编译啦，请耐心等待...... 😋" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
@@ -213,7 +213,7 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
         
-    - name: 电报通知
+    - name: 电报通知TG
       if: env.SERVERCHAN_SCKEY == 'true'
       run: |
         curl -k --data chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" --data "text=大佬：您使用<${{matrix.target}}>文件夹编译的[${{ env.TARGET_PROFILE }}]固件(${{env.Apidz}}仓库的#${{env.Run_number}}号)发布地址：${{env.RELEASES_URL}}${{ steps.tag.outputs.release_tag }} 顺利编译完成了！ 💐" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage"
@@ -231,8 +231,3 @@ jobs:
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-<<<<<<< HEAD
-    
-=======
-    
->>>>>>> a507618034b157615fdaef553912bb687ec8707c
