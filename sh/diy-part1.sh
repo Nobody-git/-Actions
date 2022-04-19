@@ -26,6 +26,5 @@
 # echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall.git" >> feeds.conf.default # passwall依赖于luci-app-passwall
 # echo "src-git clash https://github.com/frainzy1477/luci-app-clash.git" >> feeds.conf.default
 # echo "src-git adguardhome https://github.com/rufengsuixing/luci-app-adguardhome.git" >> feeds.conf.default
-# echo "src-git istore https://github.com/linkease/istore.git" >> feeds.conf.default
-
+# echo "src-git istore https://github.com/linkease/istore.git" >> feeds.conf.default 
 echo "src-git my https://github.com/Nobody-git/packages.git" >> feeds.conf.default
